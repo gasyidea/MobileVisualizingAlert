@@ -25,6 +25,8 @@ import static gasyidea.org.mobilereport.utils.Constants.CANCEL;
 import static gasyidea.org.mobilereport.utils.Constants.CONFIRM_DELETE_USER;
 import static gasyidea.org.mobilereport.utils.Constants.DELETE_USER;
 import static gasyidea.org.mobilereport.utils.Constants.EDIT_USER;
+import static gasyidea.org.mobilereport.utils.Constants.KEY_NAME;
+import static gasyidea.org.mobilereport.utils.Constants.KEY_PASS;
 import static gasyidea.org.mobilereport.utils.Constants.OK;
 import static gasyidea.org.mobilereport.utils.Constants.USERS_CONTENT_URI;
 import static gasyidea.org.mobilereport.utils.Constants.USER_ACTION;
@@ -33,15 +35,13 @@ import static gasyidea.org.mobilereport.utils.Constants.USER_DEL;
 import static gasyidea.org.mobilereport.utils.Constants.USER_EDIT;
 import static gasyidea.org.mobilereport.utils.Constants.USER_ID;
 import static gasyidea.org.mobilereport.utils.Constants.userAction;
-import static gasyidea.org.mobilereport.utils.UsersDB.KEY_NAME;
-import static gasyidea.org.mobilereport.utils.UsersDB.KEY_PASS;
 
 @EFragment
 public class UserDialogFragment extends DialogFragment implements LoaderCallbacks<Cursor> {
 
+    private TextInputEditText txtName;
+    private EditText txtPass;
     protected CoordinatorLayout snackbarCoordinatorLayout;
-    private TextInputEditText username;
-    private EditText password;
     private View userView;
     private int userId = 0;
     private NotificationHelper notificationHelper;
@@ -49,8 +49,8 @@ public class UserDialogFragment extends DialogFragment implements LoaderCallback
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        username = (TextInputEditText) userView.findViewById(R.id.username);
-        password = (EditText) userView.findViewById(R.id.password);
+        txtName = (TextInputEditText) userView.findViewById(R.id.txtName);
+        txtPass = (EditText) userView.findViewById(R.id.txtPass);
         snackbarCoordinatorLayout = (CoordinatorLayout) userView.findViewById(R.id.snackbarCoordinatorLayout);
         getLoaderManager().initLoader(0, null, this);
     }
@@ -71,8 +71,8 @@ public class UserDialogFragment extends DialogFragment implements LoaderCallback
 
         DialogInterface.OnClickListener clickListener = (dialog, which) -> {
             ContentValues contentValues = new ContentValues();
-            contentValues.put(KEY_NAME, username.getText().toString());
-            contentValues.put(KEY_PASS, password.getText().toString());
+            contentValues.put(KEY_NAME, txtName.getText().toString());
+            contentValues.put(KEY_PASS, txtPass.getText().toString());
             switch (userAction) {
                 case USER_ADD:
                     if (isValidContentValues(contentValues)) {
@@ -137,8 +137,8 @@ public class UserDialogFragment extends DialogFragment implements LoaderCallback
     @Override
     public void onLoadFinished(Loader<Cursor> arg0, Cursor data) {
         if (data.moveToFirst()) {
-            username.setText(data.getString(1));
-            password.setText(data.getString(2));
+            txtName.setText(data.getString(1));
+            txtPass.setText(data.getString(2));
         }
     }
 
@@ -149,8 +149,14 @@ public class UserDialogFragment extends DialogFragment implements LoaderCallback
     private boolean isValidContentValues(ContentValues values) {
         boolean isOk = false;
         if (values.containsKey(KEY_NAME)) {
+            String value = String.valueOf(values.get(KEY_NAME));
+            if (value.trim().length() > 0) {
+                isOk = value.length() > 4;
+            }
+        }
+        if (values.containsKey(KEY_PASS)) {
             String name = String.valueOf(values.get(KEY_NAME));
-            isOk = name.length() >= 4;
+            isOk = name.length() >= 6;
         }
         return isOk;
     }

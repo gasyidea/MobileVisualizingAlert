@@ -24,20 +24,21 @@ import gasyidea.org.mobilereport.utils.UserDialogFragment;
 import gasyidea.org.mobilereport.utils.UsersDB;
 import gasyidea.org.mobilereport.utils.UsersProvider;
 
+import static gasyidea.org.mobilereport.utils.Constants.DEL_USER;
+import static gasyidea.org.mobilereport.utils.Constants.EDIT_USER;
+import static gasyidea.org.mobilereport.utils.Constants.USER;
+import static gasyidea.org.mobilereport.utils.Constants.USER_ACTION;
 import static gasyidea.org.mobilereport.utils.Constants.USER_ADD;
 import static gasyidea.org.mobilereport.utils.Constants.USER_DEL;
 import static gasyidea.org.mobilereport.utils.Constants.USER_EDIT;
+import static gasyidea.org.mobilereport.utils.Constants.USER_ID;
 
 
 @EActivity(R.layout.activity_admin)
 public class AdminActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     private static final String TITLE = "Mobile report";
-    private static final String USER = "user";
-    private static final String USER_ACTION = "user_action";
-    private static final String USER_ID = "user_id";
-    private static final String EDIT_USER = "Please Select an user to edit";
-    private static final String DEL_USER = "Please Select an user to delete";
+
     @ViewById
     Button btnAdd, btnEdit, btnDel;
     @ViewById

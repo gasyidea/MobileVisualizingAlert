@@ -1,55 +1,63 @@
 package gasyidea.org.mobilereport.activities;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import gasyidea.org.mobilereport.R;
+import gasyidea.org.mobilereport.models.User;
+import gasyidea.org.mobilereport.utils.AdminDialogFragment;
+import gasyidea.org.mobilereport.utils.UsersDB;
+
+import static gasyidea.org.mobilereport.utils.Constants.DIALOG;
+import static gasyidea.org.mobilereport.utils.Constants.KEY_NAME;
+import static gasyidea.org.mobilereport.utils.Constants.MAIN_ACTIVITY;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private UserLoginTask mAuthTask = null;
+
+    private UsersDB usersDB;
 
     private AutoCompleteTextView username;
     private EditText password;
     private FloatingActionButton admin;
+    private Button signIn;
+
+    private UserLoginTask mAuthTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        usersDB = new UsersDB(getApplicationContext());
+
         username = (AutoCompleteTextView) findViewById(R.id.username);
         admin = (FloatingActionButton) findViewById(R.id.admin);
-
         password = (EditText) findViewById(R.id.password);
-        password.setOnEditorActionListener((textView, id, keyEvent) -> {
-            if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                attemptLogin();
-                return true;
-            }
-            return false;
-        });
+        signIn = (Button) findViewById(R.id.sign_in_button);
 
         admin.setOnClickListener(e -> {
-            Toast.makeText(getApplicationContext(), "show admin view", Toast.LENGTH_LONG).show();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            AdminDialogFragment newFragment = new AdminDialogFragment();
+            newFragment.show(transaction, DIALOG);
+        });
+
+        signIn.setOnClickListener(e -> {
+            attemptLogin();
         });
     }
 
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-        username.setError(null);
-        username.setError(null);
-
         String name = username.getText().toString();
         String pass = password.getText().toString();
 
@@ -71,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
             focusView = username;
             cancel = true;
         }
-
         if (cancel) {
             focusView.requestFocus();
         } else {
@@ -81,11 +88,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isUsernameValid(String username) {
-        return username.length() >= 4;
+        return username.length() > 4;
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 5;
+        return password.length() > 6;
     }
 
 
@@ -101,20 +108,24 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO : Test user existance
-            return true;
+            User user = usersDB.getEntity(mUsername);
+            if (user != null) {
+                if (user.getPassword().equals(mPassword)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-
             if (success) {
-                //TODO  start the main activity
-
+                Intent intent = new Intent(getApplicationContext(), MainActivity_.class);
+                startActivity(intent);
+                finish();
             } else {
-                password.setError(getString(R.string.error_incorrect_password));
-                password.requestFocus();
+                username.setError("ERROR");
             }
         }
 

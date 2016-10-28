@@ -46,4 +46,6 @@ public class Constants {
     public static final String EDITION = "Edition";
     public static int userAction = USER_ADD;
 
+    public static final String MAIN_ACTIVITY = "gasyidea.org.mobilereport.activity.MainActivity";
+
 }
