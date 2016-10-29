@@ -10,6 +10,7 @@ buildscript {
 
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
 }
 
 apply plugin: 'com.android.application'
@@ -20,6 +21,7 @@ def AAVersion = '4.1.0'
 dependencies {
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.0'
 }
 
 android {
