@@ -1,5 +1,6 @@
 package gasyidea.org.mobilereport.activities;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -11,21 +12,21 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
 import gasyidea.org.mobilereport.R;
 
-@EActivity(R.layout.activity_main)
-public class MainActivity extends AppCompatActivity {
+@EFragment(R.layout.activity_main)
+public class DetailsActivity extends Fragment {
 
     @ViewById
     BarChart my_bar_chart;
 
     /**
-     * @apiNote
-     * Jeux de données en attendant les scores de vulnérabilité, les solutions proposées pendant une
+     * @apiNote Jeux de données en attendant les scores de vulnérabilité, les solutions proposées pendant une
      * attaque .
      * SMS automatique venant du serveur cible.
      */
@@ -48,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
         labels.add("April");
         labels.add("May");
         labels.add("June");
-
-
 
         my_bar_chart.setTouchEnabled(true);
         my_bar_chart.setDragEnabled(true);
