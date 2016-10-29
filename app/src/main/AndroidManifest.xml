@@ -27,30 +27,34 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity_">
+        <activity android:name=".activities.DetailsActivity_">
             <intent-filter>
-                <action android:name="gasyidea.org.mobilereport.activities.MainActivity" />
+                <action android:name="gasyidea.org.mobilereport.activities.DetailsActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".activities.BasicActivity_">
+            <intent-filter>
+                <action android:name="gasyidea.org.mobilereport.activities.BasicActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <provider
             android:name=".utils.UsersProvider"
             android:authorities="gasyidea.org.mobilereport.utils.users"
             android:exported="false" />
-
         <provider
             android:name=".utils.SmsProvider"
             android:authorities="gasyidea.org.mobilereport.utils.alerts"
-            android:exported="false"
-            />
-
-        <receiver android:name=".activities.SmsReceiver_" android:enabled="true" android:exported="true">
+            android:exported="false" />
+        <receiver
+            android:name=".activities.SmsReceiver_"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter android:priority="999">
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

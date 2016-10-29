@@ -1,8 +1,6 @@
 package gasyidea.org.mobilereport.activities;
 
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -12,15 +10,14 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
 import gasyidea.org.mobilereport.R;
 
-@EFragment(R.layout.activity_main)
-public class DetailsActivity extends Fragment {
+@EActivity(R.layout.activity_main)
+public class DetailsActivity extends AppCompatActivity {
 
     @ViewById
     BarChart my_bar_chart;
@@ -39,8 +36,6 @@ public class DetailsActivity extends Fragment {
         entries.add(new BarEntry(12f, 3));
         entries.add(new BarEntry(18f, 4));
         entries.add(new BarEntry(9f, 5));
-
-        BarDataSet dataset = new BarDataSet(entries, "# of Calls");
 
         ArrayList<String> labels = new ArrayList<>();
         labels.add("January");

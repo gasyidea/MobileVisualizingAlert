@@ -153,5 +153,10 @@ public class SmsDB extends SQLiteOpenHelper implements DBInterface<SmsAlert> {
         SQLiteDatabase database = getWritableDatabase();
         return database.query(TABLE_ALERTS, COLUMNS, "_id=" + alertId, null, null, null, KEY_DATE + " asc ");
     }
+
+    public Cursor getLatestAlert() {
+        SQLiteDatabase database = getWritableDatabase();
+        return database.query(TABLE_ALERTS, COLUMNS, null, null, null, null, KEY_ID + " DESC", "1");
+    }
 }
 

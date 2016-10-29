@@ -36,7 +36,7 @@ public class SmsReceiver extends BroadcastReceiver {
                     Object object = createSmsEntity(data);
                     if (object instanceof SmsAlert) {
                         SmsAlert smsAlert = (SmsAlert) object;
-                        saveAcSmsDB(smsAlert);
+                        saveToDB(smsAlert);
                         abortBroadcast();
                     }
                 }
@@ -56,7 +56,7 @@ public class SmsReceiver extends BroadcastReceiver {
         return temp;
     }
 
-    private void saveAcSmsDB(SmsAlert smsAlert) {
+    private void saveToDB(SmsAlert smsAlert) {
         smsDB.addEntity(smsAlert);
     }
 }

@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import gasyidea.org.mobilereport.R;
 import gasyidea.org.mobilereport.models.User;
@@ -19,8 +18,6 @@ import gasyidea.org.mobilereport.utils.AdminDialogFragment;
 import gasyidea.org.mobilereport.utils.UsersDB;
 
 import static gasyidea.org.mobilereport.utils.Constants.DIALOG;
-import static gasyidea.org.mobilereport.utils.Constants.KEY_NAME;
-import static gasyidea.org.mobilereport.utils.Constants.MAIN_ACTIVITY;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -121,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             if (success) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity_.class);
+                Intent intent = new Intent(getApplicationContext(), BasicActivity_.class);
                 startActivity(intent);
                 finish();
             } else {
