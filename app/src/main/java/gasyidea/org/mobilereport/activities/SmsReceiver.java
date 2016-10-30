@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.telephony.gsm.SmsMessage;
 
 import org.androidannotations.annotations.Bean;
@@ -47,7 +46,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
     private Object createSmsEntity(String data) {
         String[] result = data.split("_");
-        return new SmsAlert(Integer.parseInt(result[0]), Integer.parseInt(result[1]), Integer.parseInt(result[2]), result[3]);
+        return new SmsAlert(result[0], (result[1]), result[2], Integer.parseInt(result[3]), result[4]);
     }
 
     private String decodeData(String body) {

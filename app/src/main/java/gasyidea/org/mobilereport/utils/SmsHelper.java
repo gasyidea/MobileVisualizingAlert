@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.view.View;
-import android.widget.Button;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
-
-import java.util.Date;
 
 import gasyidea.org.mobilereport.activities.DetailsActivity_;
 import gasyidea.org.mobilereport.models.SmsAlert;
@@ -19,6 +16,9 @@ public class SmsHelper {
 
     public static final String NO_ALERT = "NO_ALERT";
 
+    private String keyAttack;
+    private String codeSoluce;
+
     @Bean
     SmsDB smsDB;
 
@@ -27,18 +27,15 @@ public class SmsHelper {
         String result = NO_ALERT;
         if (cursor != null && cursor.moveToLast()) {
             SmsAlert smsAlert = smsDB.createEntity(cursor);
-            Date theDate = new Date(smsAlert.getDate());
-            int maxScore = smsAlert.getMaxScore();
-            int total = smsAlert.getTotal();
-            String soluce = smsAlert.getSoluce();
-            result = String.format("<p><h1>Dernière Tentative d'intrusion détéctée le %s  <h1> </p>" +
-                    "<p>Total des tentatives : <bold> %d </bold> <br> </p>" +
-                    "<h3>Score maximum: %d </h3> <br>" +
-                    "<p>  " +
-                    "<ul>" +
-                    "<li> %s   </li>" +
-                    "</ul>" +
-                    "</p>", theDate, total, maxScore, soluce);
+            String theDate = smsAlert.getDate();
+            String ip = smsAlert.getIp();
+            keyAttack = smsAlert.getAttack();
+            int status = smsAlert.getStatus();
+            codeSoluce = smsAlert.getCodeSoluce();
+            result = String.format("<p><h1>Dernière Tentative d'intrusion détéctée le %s  <h1> </p><br>" +
+                    "<p><h1> venant de : <bold> %s </bold> </h1><br> </p>" +
+                    "<h1>Type de l'attaque: %s </h1> <br>" +
+                    "<p><h1> <bold> succes de l'attaque: %d </bold> </h1></p>", theDate, ip, keyAttack, status);
         }
         updateComponents(view, result);
         return result;
@@ -47,6 +44,8 @@ public class SmsHelper {
     public void showAlertDetails(Context context) {
         Intent intent = new Intent(context, DetailsActivity_.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("keyAttack", keyAttack);
+        intent.putExtra("soluceCode", codeSoluce);
         context.startActivity(intent);
     }
 

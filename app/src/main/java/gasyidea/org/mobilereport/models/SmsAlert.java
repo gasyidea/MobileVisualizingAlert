@@ -3,19 +3,21 @@ package gasyidea.org.mobilereport.models;
 public class SmsAlert {
 
     private Integer id;
-    private int maxScore;
-    private int total;
-    private Integer date;
-    private String soluce;
+    private String ip;
+    private String date;
+    private String attack;
+    private Integer status;
+    private String codeSoluce;
 
     public SmsAlert() {
     }
 
-    public SmsAlert(int maxScore, int total, Integer date, String soluce) {
-        this.maxScore = maxScore;
-        this.total = total;
+    public SmsAlert(String ip, String date, String attack, Integer status, String codeSoluce) {
+        this.ip = ip;
         this.date = date;
-        this.soluce = soluce;
+        this.attack = attack;;
+        this.status=status;
+        this.codeSoluce = codeSoluce;
     }
 
     public Integer getId() {
@@ -26,35 +28,43 @@ public class SmsAlert {
         this.id = id;
     }
 
-    public int getMaxScore() {
-        return maxScore;
+    public String getIp() {
+        return ip;
     }
 
-    public void setMaxScore(int maxScore) {
-        this.maxScore = maxScore;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
-    }
-
-    public Integer getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Integer date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public String getSoluce() {
-        return soluce;
+    public String getAttack() {
+        return attack;
     }
 
-    public void setSoluce(String soluce) {
-        this.soluce = soluce;
+    public void setAttack(String attack) {
+        this.attack = attack;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getCodeSoluce() {
+        return codeSoluce;
+    }
+
+    public void setCodeSoluce(String codeSoluce) {
+        this.codeSoluce = codeSoluce;
     }
 }

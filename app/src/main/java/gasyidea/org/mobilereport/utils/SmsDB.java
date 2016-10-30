@@ -2,6 +2,7 @@ package gasyidea.org.mobilereport.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import gasyidea.org.mobilereport.models.SmsAlert;
@@ -16,20 +18,22 @@ import gasyidea.org.mobilereport.models.SmsAlert;
 @EBean
 public class SmsDB extends SQLiteOpenHelper implements DBInterface<SmsAlert> {
 
-    public static final String KEY_MAX_SCORE = "max_score";
-    public static final String KEY_TOTAL = "total";
+    public static final String KEY_IP = "ip";
     public static final String KEY_DATE = "date";
-    public static final String KEY_SOLUCE = "soluce";
+    public static final String KEY_ATTACK = "attack";
+    public static final String KEY_STATUS = "status";
+    public static final String KEY_CODE_SOLUCE = "soluce";
     private static final String KEY_ID = "_id";
-    private static final String[] COLUMNS = {KEY_ID, KEY_MAX_SCORE, KEY_TOTAL, KEY_DATE, KEY_SOLUCE};
+    private static final String[] COLUMNS = {KEY_ID, KEY_IP, KEY_DATE, KEY_ATTACK, KEY_STATUS, KEY_CODE_SOLUCE};
     private static final String TABLE_ALERTS = "alerts";
     private static final String CREATE_TABLE_ALERTS = "CREATE TABLE "
             + TABLE_ALERTS + "(" +
             KEY_ID + " INTEGER PRIMARY KEY," +
-            KEY_MAX_SCORE + " INTEGER," +
-            KEY_TOTAL + " INTEGER," +
-            KEY_DATE + " INTEGER," +
-            KEY_SOLUCE + " TEXT" + ")";
+            KEY_IP + " TEXT," +
+            KEY_DATE + " TEXT," +
+            KEY_ATTACK + " TEXT," +
+            KEY_STATUS + " INTEGER," +
+            KEY_CODE_SOLUCE + " TEXT" + ")";
 
     private static final int DATABASE_VERSION = 1;
 
@@ -54,10 +58,12 @@ public class SmsDB extends SQLiteOpenHelper implements DBInterface<SmsAlert> {
     public void addEntity(SmsAlert alert) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_MAX_SCORE, alert.getMaxScore());
-        values.put(KEY_TOTAL, alert.getTotal());
+        values.put(KEY_IP, alert.getId());
         values.put(KEY_DATE, alert.getDate());
-        values.put(KEY_SOLUCE, alert.getSoluce());
+        values.put(KEY_IP, alert.getIp());
+        values.put(KEY_ATTACK, alert.getAttack());
+        values.put(KEY_STATUS, alert.getStatus());
+        values.put(KEY_CODE_SOLUCE, alert.getCodeSoluce());
         database.insert(TABLE_ALERTS, null, values);
         database.close();
     }
@@ -65,16 +71,17 @@ public class SmsDB extends SQLiteOpenHelper implements DBInterface<SmsAlert> {
     public SmsAlert createEntity(Cursor cursor) {
         SmsAlert smsAlert = new SmsAlert();
         smsAlert.setId(cursor.getInt(0));
-        smsAlert.setMaxScore(cursor.getInt(1));
-        smsAlert.setTotal((cursor.getInt(2)));
-        smsAlert.setDate((cursor.getInt(3)));
-        smsAlert.setSoluce((cursor.getString(4)));
+        smsAlert.setIp(cursor.getString(1));
+        smsAlert.setDate(cursor.getString(2));
+        smsAlert.setAttack((cursor.getString(3)));
+        smsAlert.setStatus((cursor.getInt(4)));
+        smsAlert.setCodeSoluce((cursor.getString(5)));
         return smsAlert;
     }
 
     public List<SmsAlert> getAllEntity() {
         List<SmsAlert> smsList = new ArrayList<>();
-        String query = "SELECT * FROM " + TABLE_ALERTS;
+        String query = "SELECT COUNT(*) FROM " + TABLE_ALERTS + " group by " + KEY_IP;
         SQLiteDatabase database = getWritableDatabase();
         Cursor cursor = database.rawQuery(query, null);
         if (cursor.moveToFirst()) {
@@ -86,13 +93,28 @@ public class SmsDB extends SQLiteOpenHelper implements DBInterface<SmsAlert> {
         return smsList;
     }
 
+    public HashMap<Integer, String> getStats() {
+        HashMap<Integer, String> result = new HashMap<>();
+        String query = "SELECT COUNT("+ KEY_STATUS +"), " + KEY_IP +  " FROM " + TABLE_ALERTS + " group by " + KEY_IP;
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor cursor = database.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                result.put(cursor.getInt(0), cursor.getString(1));
+            } while (cursor.moveToNext());
+        }
+        return result;
+    }
+
     public int updateEntity(SmsAlert alert) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_MAX_SCORE, alert.getMaxScore());
-        values.put(KEY_TOTAL, alert.getTotal());
+        values.put(KEY_IP, alert.getIp());
         values.put(KEY_DATE, alert.getDate());
-        values.put(KEY_SOLUCE, alert.getSoluce());
+        values.put(KEY_IP, alert.getIp());
+        values.put(KEY_ATTACK, alert.getAttack());
+        values.put(KEY_STATUS, alert.getStatus());
+        values.put(KEY_CODE_SOLUCE, alert.getCodeSoluce());
         int i = database.update(TABLE_ALERTS, values, KEY_ID + " = ?", new String[]{String.valueOf(alert.getId())});
         database.close();
         return i;
@@ -146,7 +168,7 @@ public class SmsDB extends SQLiteOpenHelper implements DBInterface<SmsAlert> {
 
     public Cursor getAllAlerts() {
         SQLiteDatabase database = getWritableDatabase();
-        return database.query(TABLE_ALERTS, COLUMNS, null, null, null, null, KEY_DATE + " asc ");
+        return database.query(TABLE_ALERTS, COLUMNS, null, null, null, null, KEY_IP + " GROUP BY " + KEY_IP);
     }
 
     public Cursor getUserByID(String alertId) {
@@ -159,4 +181,3 @@ public class SmsDB extends SQLiteOpenHelper implements DBInterface<SmsAlert> {
         return database.query(TABLE_ALERTS, COLUMNS, null, null, null, null, KEY_ID + " DESC", "1");
     }
 }
-
